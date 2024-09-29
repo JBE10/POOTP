@@ -19,14 +19,19 @@ public class Catalogo implements Stock {
     }
     public void agregarProducto(Producto producto) {
         boolean bandera=false;
-        for (Producto p: productos){
-            if (p.getCodigo()==producto.getCodigo()){
-                System.out.println("producto ya agregado anteriormente. Si lo desea, puede actualizar stock");
-                bandera=true;
-            }
-        }
-        if (!bandera){
+        if (productos.isEmpty()){
             productos.add(producto);
+        }
+        else{
+            for (Producto p : productos) {
+                if (p.getCodigo() == producto.getCodigo()) {
+                    System.out.println("producto ya agregado anteriormente. Si lo desea, puede actualizar stock");
+                    bandera = true;
+                }
+            }
+            if (!bandera) {
+                productos.add(producto);
+            }
         }
 
     }
@@ -51,12 +56,17 @@ public class Catalogo implements Stock {
         }
     }
     public void mostrarCatalogoEmpleado(){
-        System.out.println("CATALOGO");
-        for (Producto p: productos){
-            System.out.println("Código: "+p.getCodigo()+" Descripcion: "+p.getDescripcion()+" Precio: "+p.getPrecioUnitario()+" Stock: "+p.getStockDisponible()+" StockMinimo: "+p.getStockMinimo());
-
+        if (productos==null){
+            System.out.println("El catalogo esta vacio");
         }
-        this.mostrarProductosStockBajo();
+        else{
+            System.out.println("CATALOGO");
+            for (Producto p : productos) {
+                System.out.println("Código: " + p.getCodigo() + " Descripcion: " + p.getDescripcion() + " Precio: " + p.getPrecioUnitario() + " Stock: " + p.getStockDisponible() + " StockMinimo: " + p.getStockMinimo());
+
+            }
+            this.mostrarProductosStockBajo();
+        }
 
 
     }

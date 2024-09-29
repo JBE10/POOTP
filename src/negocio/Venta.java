@@ -41,18 +41,14 @@ public class Venta {
 
         }
     }
-    public void procesarVenta(){
-        if(opcion==0){
-            this.medioDePago=new Efectivo();
+    public void procesarVenta() {
+        for (Producto p : productosVendidos) {
+            total += p.getPrecioUnitario();
         }
-        else if(opcion==1){
-            this.medioDePago=new Credito();
-        }
-        else if (opcion==2){
-            this.medioDePago=new Debito();
-        }
-        this.total=medioDePago.procesarPago(monto);
+        // luego se aplica el medio de pago
+        total = medioDePago.procesarPago(total);
     }
+
 
     public void imprimirTicket(){
         if (total==0){
@@ -60,7 +56,7 @@ public class Venta {
         }else{
             for (Producto p: productosVendidos){
                 System.out.println(p.getDescripcion()+"("+p.getCodigo()+") $"+p.getPrecioUnitario());
-                
+
             }
         }
     }

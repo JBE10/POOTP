@@ -16,9 +16,10 @@ public class Minimercado {
     public Minimercado() {
         this.nombre = "";
         this.codigo = 0;
-        this.catalogo = null;
-        this.ventas = null;
+        this.catalogo = new Catalogo(); // Inicializar un nuevo catálogo aquí
+        this.ventas = new ArrayList<Venta>(); // También inicializamos la lista de ventas
     }
+
 
     public String getNombre() {
         return nombre;
