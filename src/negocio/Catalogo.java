@@ -55,7 +55,7 @@ public class Catalogo implements Stock {
 
         }
     }
-    public void mostrarCatalogoEmpleado(){
+    public ArrayList mostrarCatalogoEmpleado(){
         if (productos==null){
             System.out.println("El catalogo esta vacio");
         }
@@ -67,6 +67,7 @@ public class Catalogo implements Stock {
             }
             this.mostrarProductosStockBajo();
         }
+        return productos;
 
 
     }
@@ -85,7 +86,7 @@ public class Catalogo implements Stock {
     public boolean stockBajo(){
         boolean bandera=false;
         for(Producto p: productos){
-            if (p.stockBajo()){
+            if (p.getStockMinimo()>p.getStockDisponible()){
                 bandera=true;
             }
         }
