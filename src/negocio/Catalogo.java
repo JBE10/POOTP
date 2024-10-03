@@ -1,97 +1,72 @@
 package negocio;
+
 import java.util.ArrayList;
-public class Catalogo implements Stock {
-    ArrayList<Producto> productos;
-    public Catalogo() {}
+
+public class Catalogo {
+    private ArrayList<Producto> productos;
+
+    public Catalogo() {
+        this.productos = new ArrayList<Producto>();
+    }
+
     public Catalogo(ArrayList<Producto> productos) {
         this.productos = productos;
     }
-    public Producto buscarProducto(int codigo) {
-        for (Producto p : productos){
-            if (p.getCodigo()==codigo){
-                return p;
-            }
 
-
+    public void imprimirCatalogo() {
+        for (Producto producto : productos) {
+            System.out.println("Codigo: " + producto.getIdProducto() + " Descripcion: " + producto.getDescripcion() + " Precio: " + producto.getPrecio() + " Stock disponible: " + producto.getStockDisponible() + " Stock minimo: " + producto.getStockMinimo());
         }
-        System.out.println("Producto no encontrado");
+    }
+
+    public void obtenerStockBajo() {
+        System.out.println("Los siguientes productos necesitan reposición.");
+        System.out.println();
+        for (Producto producto : productos) {
+            if (producto.stockBajo()) {
+                System.out.println("Codigo: " + producto.getIdProducto() + " Descripcion: " + producto.getDescripcion() + " Precio: " + producto.getPrecio() + " Stock disponible: " + producto.getStockDisponible() + " Stock minimo: " + producto.getStockMinimo());
+
+            }
+        }
+    }
+
+    public void agregarProducto(Producto producto) {
+        for (Producto producto2 : productos) {
+            if (producto2.getIdProducto() == producto.getIdProducto()) {
+                System.out.println("producto ya agregado anteriormente. Actualice stock");
+                return;
+            }
+        }
+        productos.add(producto);
+        System.out.println("Producto agregado correctamente.");
+    }
+
+    public void eliminarProducto(Producto producto) {
+        boolean bandera = false;
+
+        for (int i = productos.size() - 1; i >= 0; i--) {
+            Producto producto2 = productos.get(i);
+            if (producto2.getIdProducto() == producto.getIdProducto()) {
+                productos.remove(i);
+                bandera = true;
+                System.out.println("Producto eliminado correctamente.");
+                break;
+            }
+        }
+
+        if (!bandera) {
+            System.out.println("Producto no encontrado.");
+        }
+    }
+
+    public Producto obtenerProducto(int id) {
+        for (Producto producto2 : productos) {
+            if (producto2.getIdProducto() == id) {
+                return producto2;
+            }
+        }
+        System.out.println("Producto no encontrado.");
         return null;
     }
-    public void agregarProducto(Producto producto) {
-        boolean bandera=false;
-        if (productos.isEmpty()){
-            productos.add(producto);
-        }
-        else{
-            for (Producto p : productos) {
-                if (p.getCodigo() == producto.getCodigo()) {
-                    System.out.println("producto ya agregado anteriormente. Si lo desea, puede actualizar stock");
-                    bandera = true;
-                }
-            }
-            if (!bandera) {
-                productos.add(producto);
-            }
-        }
-
-    }
-
-    public void actualizarStock(int codigo,int cantidad){
-        Producto p= this.buscarProducto(codigo);
-        if (p==null){
-
-        }else{
-            int cant= p.getStockDisponible();
-            cant=cant+cantidad;
-            p.setStockDisponible(cant);
-            System.out.println("Stock actualizado correctamente");
-        }
-
-    }
-    public void mostrarCatalogoCliente(){
-        System.out.println("CATÁLOGO");
-        for (Producto p: productos){
-            System.out.println("Código: "+p.getCodigo()+" Descripcion: "+p.getDescripcion()+" Precio: "+p.getPrecioUnitario());
-
-        }
-    }
-    public ArrayList mostrarCatalogoEmpleado(){
-        if (productos==null){
-            System.out.println("El catalogo esta vacio");
-        }
-        else{
-            System.out.println("CATALOGO");
-            for (Producto p : productos) {
-                System.out.println("Código: " + p.getCodigo() + " Descripcion: " + p.getDescripcion() + " Precio: " + p.getPrecioUnitario() + " Stock: " + p.getStockDisponible() + " StockMinimo: " + p.getStockMinimo());
-
-            }
-            this.mostrarProductosStockBajo();
-        }
-        return productos;
-
-
-    }
-
-    public void mostrarProductosStockBajo(){
-        System.out.println("Los siguientes productos necesitan reposición");
-        for (Producto p: productos){
-            if (p.stockBajo()){
-                System.out.println("El producto "+p.getDescripcion()+"("+p.getCodigo()+") necesita una reposición mínima de "+ (p.getStockMinimo()-p.getStockDisponible())+" unidades.");
-
-            }
-        }
-
-    }
-
-    public boolean stockBajo(){
-        boolean bandera=false;
-        for(Producto p: productos){
-            if (p.getStockMinimo()>p.getStockDisponible()){
-                bandera=true;
-            }
-        }
-        return bandera;
-    }
-
 
 }

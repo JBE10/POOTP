@@ -2,40 +2,38 @@ package negocio;
 
 public class Credito extends MedioDePago {
     private int cuotas;
-    private double monto;
-
-
-    public Credito(int cuotas) {
-        super();
-        this.cuotas=cuotas;
-
-    }
     public Credito(){
         super();
-        this.cuotas=0;
+        this.cuotas=1;
+    }
+    public Credito(int cuotas) {
+        super();
+        this.cuotas = cuotas;
+    }
+    public int getCuotas() {
+        return cuotas;
     }
     public void setCuotas(int cuotas) {
-        this.cuotas=cuotas;
+        this.cuotas = cuotas;
     }
-
-    public double calcularRecargo(double monto) {
-        double recargo=0;
-        if (cuotas==2){
-            recargo=monto*0.06;
-        } else if (cuotas==3) {
-            recargo=monto*0.12;
-            
-        } else if (cuotas==6) {
-            recargo=(monto/0.20);
+    public double calcularRecargo(int cuotas,double monto){
+        if (cuotas==1){
+            return 0.0;
         }
-
-        return recargo;
+        else if (cuotas==2){
+            return monto*0.06;
+        }else if (cuotas==3){
+            return monto*0.12;
+        }else if (cuotas==4){
+            return monto*0.20;
+        }
+        else {
+            return 0.0;
+        }
     }
 
     @Override
     public double procesarPago(double monto) {
-        this.monto = monto;
-        double total=calcularRecargo(monto)+monto;
-        return total;
+        return monto+calcularRecargo(cuotas,monto);
     }
 }

@@ -1,8 +1,7 @@
 package negocio;
 
 public abstract class MedioDePago {
-    public double procesarPago(double monto){
-         return monto;
+    public double procesarPago(double monto) {
+        return monto;
     }
-
 }
