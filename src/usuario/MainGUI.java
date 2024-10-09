@@ -379,8 +379,13 @@ public class MainGUI extends JFrame {
 
         btnAgregar.addActionListener(e -> {
             try {
-                Producto producto=new Producto();
+                Producto producto = new Producto();
                 int codigoProducto = Integer.parseInt(txtCodigoProducto.getText());
+                // Verificar que no exista un producto con el mismo código
+                if (minimercado.getCatalogo().obtenerProducto(codigoProducto) != null) {
+                    JOptionPane.showMessageDialog(frame, "Ya existe un producto con este código.");
+                    return;
+                }
                 String nombreProducto = txtNombreProducto.getText();
                 double precioProducto = Double.parseDouble(txtPrecioProducto.getText());
                 int stockMinimo = Integer.parseInt(txtStockMinimo.getText());
@@ -394,9 +399,10 @@ public class MainGUI extends JFrame {
                 minimercado.getCatalogo().agregarProducto(producto);
 
                 JOptionPane.showMessageDialog(frame, "Producto agregado correctamente.");
+                System.out.println("Producto agregado: " + producto); // Mensaje de debug
                 frame.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Error al agregar producto.");
+                JOptionPane.showMessageDialog(frame, "Error al agregar producto: " + ex.getMessage());
             }
         });
     }
