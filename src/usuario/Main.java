@@ -159,7 +159,7 @@ public class Main {
         System.out.println("TOTAL A PAGAR: $"+v.getTotal());
     }
     public static void mostrarCatalogo(Minimercado m){
-        m.getCatalogo().imprimirCatalogo();
+        //m.getCatalogo().imprimirCatalogo();
     }
     public static void registrarProductos(Minimercado m, Scanner sc) {
 

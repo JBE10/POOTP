@@ -4,70 +4,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import negocio.*;
-
 
 public class MainGUI extends JFrame {
     private Empresa e = new Empresa();
 
     public MainGUI() {
-        // Configurar ventana principal
+        configurarVentanaPrincipal();
+        agregarPanelBotones();
+    }
+
+    private void configurarVentanaPrincipal() {
         setTitle("Sistema Minimercados");
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+    }
 
-        // Crear panel de botones
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1)); // 5 opciones de menú
+    private void agregarPanelBotones() {
+        JPanel panel = new JPanel(new GridLayout(5, 1)); // 5 opciones de menú
 
-        // Crear botones
         JButton btnCrearMinimercado = new JButton("Crear Minimercado");
         JButton btnIngresarMinimercado = new JButton("Ingresar al sistema de un Minimercado");
         JButton btnFacturacionTotal = new JButton("Obtener Facturación Total");
         JButton btnSalir = new JButton("Salir del Sistema");
 
-        // Agregar botones al panel
         panel.add(btnCrearMinimercado);
         panel.add(btnIngresarMinimercado);
         panel.add(btnFacturacionTotal);
         panel.add(btnSalir);
-
-        // Agregar panel al JFrame
         add(panel, BorderLayout.CENTER);
 
         // Agregar eventos a los botones
-        btnCrearMinimercado.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarFormularioCrearMinimercado();
-            }
-        });
-
-        btnIngresarMinimercado.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarFormularioIngresarMinimercado();
-            }
-        });
-
-        btnFacturacionTotal.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarFacturacionTotal();
-            }
-        });
-
-        btnSalir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        btnCrearMinimercado.addActionListener(e -> mostrarFormularioCrearMinimercado());
+        btnIngresarMinimercado.addActionListener(e -> mostrarFormularioIngresarMinimercado());
+        btnFacturacionTotal.addActionListener(e -> mostrarFacturacionTotal());
+        btnSalir.addActionListener(e -> System.exit(0));
     }
 
-    // Método para crear minimercado
     private void mostrarFormularioCrearMinimercado() {
         JFrame frame = new JFrame("Crear Minimercado");
         frame.setSize(300, 200);
@@ -88,30 +64,25 @@ public class MainGUI extends JFrame {
 
         frame.setVisible(true);
 
-        btnCrear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int codigo = Integer.parseInt(txtCodigo.getText());
-                    String nombre = txtNombre.getText();
+        btnCrear.addActionListener(e -> {
+            try {
+                int codigo = Integer.parseInt(txtCodigo.getText());
+                String nombre = txtNombre.getText();
 
-                    Minimercado m = new Minimercado();
-                    m.setCodigo(codigo);
-                    m.setNombre(nombre);
+                Minimercado m = new Minimercado();
+                m.setCodigo(codigo);
+                m.setNombre(nombre);
 
-                    // Solución: Usar MainGUI.this.e para acceder a la instancia de Empresa
-                    MainGUI.this.e.agregarMinimercado(m);
+                MainGUI.this.e.agregarMinimercado(m);
 
-                    JOptionPane.showMessageDialog(frame, "Minimercado creado correctamente.");
-                    frame.dispose(); // Cierra la ventana de creación
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Error al crear minimercado.");
-                }
+                JOptionPane.showMessageDialog(frame, "Minimercado creado correctamente.");
+                frame.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al crear minimercado.");
             }
         });
     }
 
-    // Método para ingresar a un minimercado
     private void mostrarFormularioIngresarMinimercado() {
         JFrame frame = new JFrame("Ingresar al Minimercado");
         frame.setSize(300, 200);
@@ -128,27 +99,23 @@ public class MainGUI extends JFrame {
 
         frame.setVisible(true);
 
-        btnIngresar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int codigo = Integer.parseInt(txtCodigo.getText());
-                    Minimercado minimercado = MainGUI.this.e.obtenerMinimercadoPorCodigo(codigo);
+        btnIngresar.addActionListener(e -> {
+            try {
+                int codigo = Integer.parseInt(txtCodigo.getText());
+                Minimercado minimercado = MainGUI.this.e.obtenerMinimercadoPorCodigo(codigo);
 
-                    if (minimercado == null) {
-                        JOptionPane.showMessageDialog(frame, "Minimercado inexistente.");
-                    } else {
-                        frame.dispose();
-                        mostrarMenuMinimercado(minimercado); // Solo se llama si minimercado no es nulo
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Error al ingresar al minimercado.");
+                if (minimercado == null) {
+                    JOptionPane.showMessageDialog(frame, "Minimercado inexistente.");
+                } else {
+                    frame.dispose();
+                    mostrarMenuMinimercado(minimercado);
                 }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al ingresar al minimercado.");
             }
         });
     }
 
-    // Mostrar el menú del minimercado
     private void mostrarMenuMinimercado(Minimercado minimercado) {
         JFrame frame = new JFrame("Menú del Minimercado: " + minimercado.getNombre());
         frame.setSize(400, 300);
@@ -168,57 +135,282 @@ public class MainGUI extends JFrame {
 
         frame.setVisible(true);
 
-        // Puedes agregar los eventos para cada botón de manera similar
+        btnActualizarStock.addActionListener(e -> actualizarStock(minimercado));
+        btnMostrarCatalogo.addActionListener(e -> mostrarCatalogo(minimercado));
+        btnMostrarFacturacion.addActionListener(e -> JOptionPane.showMessageDialog(null, "Facturación: " + minimercado.getFacturacion()));
+        btnAgregarProducto.addActionListener(e -> agregarProducto(minimercado));
+        btnRealizarVenta.addActionListener(e -> realizarVenta(minimercado));
+    }
+
+
+
+    private void realizarVenta(Minimercado minimercado) {
+        JFrame frame = new JFrame("Realizar Venta");
+        frame.setSize(400, 300);
+        frame.setLayout(new GridLayout(4, 2));
+
+        JLabel lblCodigoProducto = new JLabel("Código del Producto:");
+        JTextField txtCodigoProducto = new JTextField();
+        JLabel lblCantidad = new JLabel("Cantidad:");
+        JTextField txtCantidad = new JTextField();
+        JButton btnAgregarProducto = new JButton("Agregar Producto");
+        JButton btnFinalizarVenta = new JButton("Finalizar Venta");
+
+        frame.add(lblCodigoProducto);
+        frame.add(txtCodigoProducto);
+        frame.add(lblCantidad);
+        frame.add(txtCantidad);
+        frame.add(new JLabel()); // Espaciador
+        frame.add(btnAgregarProducto);
+        frame.add(new JLabel()); // Espaciador
+        frame.add(btnFinalizarVenta);
+
+        frame.setVisible(true);
+
+        Venta venta = new Venta();
+
         btnAgregarProducto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Aquí agregas la funcionalidad para agregar productos
+                try {
+                    int codigoProducto = Integer.parseInt(txtCodigoProducto.getText());
+                    int cantidad = Integer.parseInt(txtCantidad.getText());
+
+                    Producto producto = minimercado.getCatalogo().obtenerProducto(codigoProducto);
+
+                    if (producto != null) {
+                        venta.agregarProductos(producto, cantidad);
+                        JOptionPane.showMessageDialog(frame, "Producto agregado a la venta.");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Producto no encontrado.");
+                    }
+
+                    txtCodigoProducto.setText("");
+                    txtCantidad.setText("");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Datos inválidos, por favor ingrese un número.");
+                }
             }
         });
 
-        btnRealizarVenta.addActionListener(new ActionListener() {
+        btnFinalizarVenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Aquí agregas la funcionalidad para realizar ventas
-            }
-        });
-
-        btnActualizarStock.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Aquí agregas la funcionalidad para actualizar stock
-            }
-        });
-
-        btnMostrarCatalogo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Aquí muestras el catálogo
-            }
-        });
-
-        btnMostrarFacturacion.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Facturación: " + minimercado.getFacturacion());
+                mostrarFormularioMedioDePago(venta, minimercado);
+                frame.dispose(); // Cerrar ventana actual
             }
         });
     }
 
-    // Método para mostrar la facturación total de la empresa
+    private void mostrarFormularioMedioDePago(Venta venta, Minimercado minimercado) {
+        JFrame frame = new JFrame("Seleccionar Medio de Pago");
+        frame.setSize(300, 200);
+        frame.setLayout(new GridLayout(4, 1));
+
+        JLabel lblMedioPago = new JLabel("Seleccione el medio de pago:");
+        JRadioButton rbtnDebito = new JRadioButton("Débito");
+        JRadioButton rbtnEfectivo = new JRadioButton("Efectivo");
+        JRadioButton rbtnCredito = new JRadioButton("Crédito");
+        JButton btnConfirmarPago = new JButton("Confirmar Pago");
+
+        ButtonGroup grupoMedioPago = new ButtonGroup();
+        grupoMedioPago.add(rbtnDebito);
+        grupoMedioPago.add(rbtnEfectivo);
+        grupoMedioPago.add(rbtnCredito);
+
+        frame.add(lblMedioPago);
+        frame.add(rbtnDebito);
+        frame.add(rbtnEfectivo);
+        frame.add(rbtnCredito);
+        frame.add(btnConfirmarPago);
+
+        frame.setVisible(true);
+
+        btnConfirmarPago.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedioDePago medioDePago = null;
+
+                if (rbtnDebito.isSelected()) {
+                    medioDePago = new Debito();
+                } else if (rbtnEfectivo.isSelected()) {
+                    medioDePago = new Efectivo();
+                } else if (rbtnCredito.isSelected()) {
+                    mostrarFormularioCuotas(venta, minimercado);
+                    frame.dispose(); // Cerrar ventana actual
+                    return;
+                }
+
+                procesarVenta(venta, medioDePago, minimercado);
+                frame.dispose();
+            }
+        });
+    }
+
+    private void mostrarFormularioCuotas(Venta venta, Minimercado minimercado) {
+        JFrame frame = new JFrame("Seleccionar Cuotas");
+        frame.setSize(300, 200);
+        frame.setLayout(new GridLayout(3, 1));
+
+        JLabel lblCuotas = new JLabel("Ingrese el número de cuotas (1, 2, 3, 6):");
+        JTextField txtCuotas = new JTextField();
+        JButton btnConfirmarCuotas = new JButton("Confirmar Cuotas");
+
+        frame.add(lblCuotas);
+        frame.add(txtCuotas);
+        frame.add(btnConfirmarCuotas);
+
+        frame.setVisible(true);
+
+        btnConfirmarCuotas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int cuotas = Integer.parseInt(txtCuotas.getText());
+                    if (cuotas == 1 || cuotas == 2 || cuotas == 3 || cuotas == 6) {
+                        MedioDePago medioDePago = new Credito(cuotas);
+                        procesarVenta(venta, medioDePago, minimercado);
+                        frame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Número de cuotas no válido.");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Por favor ingrese un número válido.");
+                }
+            }
+        });
+    }
+
+    private void procesarVenta(Venta venta, MedioDePago medioDePago, Minimercado minimercado) {
+        venta.setmedioDePago(medioDePago);
+        venta.procesarVenta();
+        minimercado.agregarVenta(venta);
+
+        JOptionPane.showMessageDialog(null, "Venta procesada. TOTAL A PAGAR: $" + venta.getTotal());
+    }
+
+    private void actualizarStock(Minimercado minimercado) {
+        JFrame frame = new JFrame("Actualizar Stock");
+        frame.setSize(300, 200);
+        frame.setLayout(new GridLayout(3, 2));
+
+        JLabel lblCodigoProducto = new JLabel("Código del Producto: ");
+        JTextField txtCodigoProducto = new JTextField();
+        JLabel lblCantidadStock = new JLabel("Cantidad a Agregar: ");
+        JTextField txtCantidadStock = new JTextField();
+        JButton btnActualizar = new JButton("Actualizar");
+
+        frame.add(lblCodigoProducto);
+        frame.add(txtCodigoProducto);
+        frame.add(lblCantidadStock);
+        frame.add(txtCantidadStock);
+        frame.add(new JLabel()); // Espaciador
+        frame.add(btnActualizar);
+
+        frame.setVisible(true);
+
+        btnActualizar.addActionListener(e -> {
+            try {
+                int codigoProducto = Integer.parseInt(txtCodigoProducto.getText());
+                int cantidadStock = Integer.parseInt(txtCantidadStock.getText());
+
+                Producto producto = minimercado.getCatalogo().obtenerProducto(codigoProducto);
+                if (producto != null) {
+                    producto.setStockDisponible(cantidadStock+producto.getStockDisponible());
+                    JOptionPane.showMessageDialog(frame, "Stock actualizado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Producto no encontrado.");
+                }
+                frame.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al actualizar stock.");
+            }
+        });
+    }
+
+    private void mostrarCatalogo(Minimercado minimercado) {
+        Catalogo catalogo = minimercado.getCatalogo();
+        ArrayList<Producto> listaCatalogo = catalogo.devolverCatalogo();
+
+        DefaultListModel<Producto> modeloLista = new DefaultListModel<>();
+        for (Producto item : listaCatalogo) {
+            modeloLista.addElement(item);
+        }
+
+        JList<Producto> listaMostrar = new JList<>(modeloLista);
+        JScrollPane scrollPane = new JScrollPane(listaMostrar);
+
+        JFrame ventanaCatalogo = new JFrame("Catálogo del Minimercado");
+        ventanaCatalogo.setSize(300, 200);
+        ventanaCatalogo.add(scrollPane);
+        ventanaCatalogo.setVisible(true);
+    }
+
+    private void agregarProducto(Minimercado minimercado) {
+        JFrame frame = new JFrame("Agregar Producto");
+        frame.setSize(300, 200);
+        frame.setLayout(new GridLayout(5, 2));
+
+        JLabel lblCodigoProducto = new JLabel("Código del Producto: ");
+        JTextField txtCodigoProducto = new JTextField();
+        JLabel lblNombreProducto = new JLabel("Nombre del Producto: ");
+        JTextField txtNombreProducto = new JTextField();
+        JLabel lblPrecioProducto = new JLabel("Precio: ");
+        JTextField txtPrecioProducto = new JTextField();
+        JLabel lblStockMinimo = new JLabel("Stock mínimo: ");
+        JTextField txtStockMinimo = new JTextField();
+        JLabel lblStockActual = new JLabel("Stock actual: ");
+        JTextField txtStockActual = new JTextField();
+        JButton btnAgregar = new JButton("Agregar");
+
+        frame.add(lblCodigoProducto);
+        frame.add(txtCodigoProducto);
+        frame.add(lblNombreProducto);
+        frame.add(txtNombreProducto);
+        frame.add(lblPrecioProducto);
+        frame.add(txtPrecioProducto);
+        frame.add(lblStockMinimo);
+        frame.add(txtStockMinimo);
+        frame.add(lblStockActual);
+        frame.add(txtStockActual);
+        frame.add(btnAgregar);
+
+        frame.setVisible(true);
+
+        btnAgregar.addActionListener(e -> {
+            try {
+                Producto producto=new Producto();
+                int codigoProducto = Integer.parseInt(txtCodigoProducto.getText());
+                String nombreProducto = txtNombreProducto.getText();
+                double precioProducto = Double.parseDouble(txtPrecioProducto.getText());
+                int stockMinimo = Integer.parseInt(txtStockMinimo.getText());
+                int stockActual = Integer.parseInt(txtStockActual.getText());
+
+                producto.setIdProducto(codigoProducto);
+                producto.setDescripcion(nombreProducto);
+                producto.setStockMinimo(stockMinimo);
+                producto.setPrecio(precioProducto);
+                producto.setStockDisponible(stockActual);
+                minimercado.getCatalogo().agregarProducto(producto);
+
+                JOptionPane.showMessageDialog(frame, "Producto agregado correctamente.");
+                frame.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al agregar producto.");
+            }
+        });
+    }
+
+
+
     private void mostrarFacturacionTotal() {
-        double facturacionTotal = e.obtenerFacturacionTotal();
-        JOptionPane.showMessageDialog(this, "Facturación total de la empresa: " + facturacionTotal);
+        JOptionPane.showMessageDialog(null, "Facturación total de la empresa: " + e.obtenerFacturacionTotal());
     }
 
     public static void main(String[] args) {
-        // Crear y mostrar la ventana principal
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                MainGUI gui = new MainGUI();
-                gui.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            MainGUI mainGui = new MainGUI();
+            mainGui.setVisible(true);
         });
     }
 }

@@ -13,10 +13,8 @@ public class Catalogo {
         this.productos = productos;
     }
 
-    public void imprimirCatalogo() {
-        for (Producto producto : productos) {
-            System.out.println("Codigo: " + producto.getIdProducto() + " Descripcion: " + producto.getDescripcion() + " Precio: " + producto.getPrecio() + " Stock disponible: " + producto.getStockDisponible() + " Stock minimo: " + producto.getStockMinimo());
-        }
+    public ArrayList<Producto> devolverCatalogo() {
+       return  this.productos;
     }
 
     public void obtenerStockBajo() {
