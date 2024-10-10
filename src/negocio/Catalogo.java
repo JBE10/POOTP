@@ -4,41 +4,35 @@ import java.util.ArrayList;
 
 public class Catalogo {
     private ArrayList<Producto> productos;
-
     public Catalogo() {
         this.productos = new ArrayList<Producto>();
     }
-
     public Catalogo(ArrayList<Producto> productos) {
         this.productos = productos;
     }
-
-    public ArrayList<Producto> devolverCatalogo() {
-       return  this.productos;
-    }
-
-    public void obtenerStockBajo() {
-        System.out.println("Los siguientes productos necesitan reposición.");
-        System.out.println();
+    public ArrayList<Producto> obtenerStockBajo(){
+        ArrayList<Producto> productosBajos=new ArrayList<>();
         for (Producto producto : productos) {
-            if (producto.stockBajo()) {
-                System.out.println("Codigo: " + producto.getIdProducto() + " Descripcion: " + producto.getDescripcion() + " Precio: " + producto.getPrecio() + " Stock disponible: " + producto.getStockDisponible() + " Stock minimo: " + producto.getStockMinimo());
+            if (producto.stockBajo()){
+                productosBajos.add(producto);
+
 
             }
         }
+        return productosBajos;
     }
-
-    public void agregarProducto(Producto producto) {
+    public boolean agregarProducto(Producto producto){
         for (Producto producto2 : productos) {
             if (producto2.getIdProducto() == producto.getIdProducto()) {
                 System.out.println("producto ya agregado anteriormente. Actualice stock");
-                return;
+                return false;
             }
+
         }
         productos.add(producto);
         System.out.println("Producto agregado correctamente.");
+        return true;
     }
-
     public void eliminarProducto(Producto producto) {
         boolean bandera = false;
 
@@ -56,8 +50,7 @@ public class Catalogo {
             System.out.println("Producto no encontrado.");
         }
     }
-
-    public Producto obtenerProducto(int id) {
+    public Producto obtenerProducto(int id){
         for (Producto producto2 : productos) {
             if (producto2.getIdProducto() == id) {
                 return producto2;
@@ -66,5 +59,9 @@ public class Catalogo {
         System.out.println("Producto no encontrado.");
         return null;
     }
+    public ArrayList<Producto> obtenerProductos(){
+        return productos;
+    }
+
 
 }

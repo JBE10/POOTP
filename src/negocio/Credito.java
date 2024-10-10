@@ -1,7 +1,6 @@
 package negocio;
 
 public class Credito extends MedioDePago {
-    public double recargo=0.0;
     private int cuotas;
     public Credito(){
         super();
@@ -19,23 +18,17 @@ public class Credito extends MedioDePago {
     }
     public double calcularRecargo(int cuotas,double monto){
         if (cuotas==1){
-            recargo=0.0;
-            return recargo;
+            return 0.0;
         }
         else if (cuotas==2){
-            recargo=monto*0.06;
-            return recargo;
+            return monto*0.06;
         }else if (cuotas==3){
-            recargo=monto*0.12;
-            return recargo;
+            return monto*0.12;
         }else if (cuotas==4){
-            recargo=monto*0.20;
-            return recargo;
+            return monto*0.20;
         }
-        else {
-            recargo=0.0;
-            return recargo;
-        }
+        return 0.0;
+
     }
 
     @Override

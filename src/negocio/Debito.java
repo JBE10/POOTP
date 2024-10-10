@@ -1,7 +1,7 @@
 package negocio;
 
-public class Debito extends MedioDePago {
-    public Debito() {
+public class Debito extends MedioDePago{
+    public  Debito(){
         super();
     }
 
