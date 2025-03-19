@@ -5,7 +5,6 @@ import negocio.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainGUI extends javax.swing.JFrame {
     static Minimercado minimercado = new Minimercado();
@@ -34,7 +33,7 @@ public class MainGUI extends javax.swing.JFrame {
         JPanel panel = new JPanel(new GridLayout(6, 1, 5, 5));
         Dimension buttonSize = new Dimension(200, 40);
 
-        // Crear botones
+
         JButton agregarProducto = crearBoton("Agregar Producto", buttonSize, this::agregarProducto);
         JButton eliminarProducto = crearBoton("Eliminar Producto", buttonSize, this::eliminarProducto);
         JButton realizarVenta = crearBoton("Realizar Venta", buttonSize, this::realizarVenta);
@@ -45,7 +44,7 @@ public class MainGUI extends javax.swing.JFrame {
         JButton stockBajo = crearBoton("Productos con Stock Bajo", buttonSize, this::mostrarStockBajo);
         JButton salir = crearBoton("Salir", buttonSize, e -> System.exit(0));
 
-        // Agregar botones al panel
+
         panel.add(agregarProducto);
         panel.add(eliminarProducto);
         panel.add(realizarVenta);
@@ -59,9 +58,9 @@ public class MainGUI extends javax.swing.JFrame {
         add(panel, BorderLayout.CENTER);
     }
 
-    private JButton crearBoton(String texto, Dimension tamaño, java.awt.event.ActionListener action) {
+    private JButton crearBoton(String texto, Dimension tamano, java.awt.event.ActionListener action) {
         JButton boton = new JButton(texto);
-        boton.setPreferredSize(tamaño);
+        boton.setPreferredSize(tamano);
         boton.addActionListener(action);
         return boton;
     }
@@ -143,6 +142,7 @@ public class MainGUI extends javax.swing.JFrame {
                 case 1: return new Efectivo();
                 case 2: return new Debito();
                 case 3: {
+                    //Meter la condicion aca
                     int cuotas = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese la cantidad de cuotas (2, 3, 6):"));
                     return new Credito(cuotas);
                 }
@@ -225,7 +225,7 @@ public class MainGUI extends javax.swing.JFrame {
     }
 
     private void mostrarStockBajo(java.awt.event.ActionEvent e) {
-        List<Producto> productosConStockBajo = minimercado.getCatalogo().obtenerStockBajo();
+        ArrayList<Producto> productosConStockBajo = minimercado.getCatalogo().obtenerStockBajo();
         if (productosConStockBajo.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay productos con stock bajo.");
         } else {
